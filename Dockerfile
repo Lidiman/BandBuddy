@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+FROM php:8.4-fpm
+=======
+>>>>>>> 46778ab (Add frontend build stage to Dockerfile)
 
 FROM node:22-alpine AS frontend
 WORKDIR /app
@@ -6,7 +12,12 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
+<<<<<<< HEAD
 FROM php:8.3-fpm AS app
+=======
+FROM php:8.4-fpm AS app
+>>>>>>> Stashed changes
+>>>>>>> 46778ab (Add frontend build stage to Dockerfile)
 
 WORKDIR /app
 
