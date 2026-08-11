@@ -20,10 +20,10 @@ DB_DATABASE=railway
 DB_USERNAME=root
 DB_PASSWORD=EMiJAFEPEuIBeaCQncQdfovKmSPthMFJ
 
-SESSION_DRIVER=database
+SESSION_DRIVER=file
 SESSION_LIFETIME=120
 
-CACHE_STORE=database
+CACHE_STORE=file
 BROADCAST_DRIVER=log
 QUEUE_CONNECTION=database
 
@@ -41,6 +41,10 @@ for i in {1..30}; do
 done
 
 php artisan storage:link --force 2>/dev/null || true
+
+echo "=== Clearing config and route caches ==="
+php artisan config:clear 2>/dev/null || true
+php artisan route:clear 2>/dev/null || true
 
 echo "=== Starting PHP server on port $PORT ==="
 php artisan serve --host=0.0.0.0 --port=$PORT
