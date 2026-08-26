@@ -8,13 +8,13 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: ${DB_DATABASE:-bandbuddy}
-      MYSQL_USER: ${DB_USERNAME:-bandbuddy}
       MYSQL_PASSWORD: ${DB_PASSWORD:-bandbuddy_secret}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_secret}
+      MYSQL_USER: app
     volumes:
       - dbdata:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-root_secret}"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${MYSQL_ROOT_PASSWORD:-root_secret}"]
       interval: 5s
       timeout: 5s
       retries: 20

@@ -1,10 +1,4 @@
-<<<<<<< HEAD
-=======
-<<<<<<< Updated upstream
-FROM php:8.4-fpm
-=======
->>>>>>> 46778ab (Add frontend build stage to Dockerfile)
-
+# ---------- Stage 1: Frontend build ----------
 FROM node:22-alpine AS frontend
 WORKDIR /app
 COPY package.json package-lock.json ./
@@ -12,17 +6,15 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-<<<<<<< HEAD
-FROM php:8.3-fpm AS app
-=======
+# ---------- Stage 2: PHP-FPM runtime ----------
 FROM php:8.4-fpm AS app
->>>>>>> Stashed changes
->>>>>>> 46778ab (Add frontend build stage to Dockerfile)
 
 WORKDIR /app
 
 ENV APP_ENV=production
 
+# Runtime + build deps. ffmpeg is REQUIRED by yt-dlp for --extract-audio.
+# gd is required by intervention/image. Node is NOT needed at runtime.
 RUN apt-get update && apt-get install -y --no-install-recommends \
         unzip git curl ffmpeg \
         libzip-dev libpng-dev libjpeg-dev \
@@ -33,32 +25,33 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# Python venv (runtime dependency, no caches kept)
 COPY python/requirements.txt python/requirements.txt
 RUN python3 -m venv /app/.venv \
     && /app/.venv/bin/pip install --no-cache-dir -r python/requirements.txt \
     && rm -rf /root/.cache
 
+# Composer dependencies (production only, cached apart from source changes)
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-scripts --no-autoloader \
         --prefer-dist --no-progress --no-interaction
 
-COPY . .
-
-
-COPY --from=frontend /app/public/build public/build
-RUN rm -rf public/build/.vite-tmp
-
-RUN composer dump-autoload --optimize --classmap-authoritative --no-dev \
-    && php artisan package:discover --ansi --no-interaction
-
-    
+# Ensure writable storage directories exist before copying source
 RUN mkdir -p storage/app/public storage/framework/cache/data storage/framework/sessions \
         storage/framework/views storage/logs bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
-COPY docker/entrypoint.sh docker/entrypoint.sh
-RUN chmod +x docker/entrypoint.sh
+# Application source (docker/, app/, config/, public/, ...)
+COPY . .
+
+# Built Vite assets (discard whatever the host had under public/build)
+COPY --from=frontend /app/public/build public/build
+RUN rm -rf public/build/.vite-tmp
+
+RUN composer dump-autoload --optimize --classmap-authoritative --no-dev \
+    && php artisan config:cache --no-interaction || true \
+    && php artisan route:cache --no-interaction || true
 
 EXPOSE 9000
 
