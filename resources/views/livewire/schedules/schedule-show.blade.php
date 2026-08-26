@@ -8,7 +8,7 @@
             <div>
                 <div class="flex items-center gap-2 mb-1">
                     <span class="badge flex items-center gap-1">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $typeIcon }}"/></svg>
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" /></svg>
                         {{ $typeLabel }}
                     </span>
                     <span class="badge badge-{{ $statusColor }}">{{ $statusLabel }}</span>
