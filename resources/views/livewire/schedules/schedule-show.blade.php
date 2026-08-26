@@ -7,7 +7,7 @@
             </a>
             <div>
                 <div class="flex items-center gap-2 mb-1">
-                    <span class="badge badge-{{ $typeColor }} flex items-center gap-1">
+                    <span class="badge flex items-center gap-1">
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $typeIcon }}"/></svg>
                         {{ $typeLabel }}
                     </span>
@@ -16,7 +16,7 @@
                 <h1 class="text-3xl font-bold text-white">{{ $schedule->title }}</h1>
             </div>
         </div>
-        
+
         <div class="flex gap-2">
             @if($scheduleStatus !== \App\Enums\ScheduleStatus::Completed->value && $scheduleStatus !== \App\Enums\ScheduleStatus::Cancelled->value)
                 @if($scheduleType === \App\Enums\ScheduleType::Gig->value)
@@ -154,7 +154,7 @@
                             <p class="text-sm font-semibold text-white">{{ $schedule->date->format('l, M j, Y') }}</p>
                         </div>
                     </div>
-                    
+
                     <div class="p-4 flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center shrink-0">
                             <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -164,7 +164,7 @@
                             <p class="text-sm font-semibold text-white">{{ $schedule->start_time?->format('g:i A') ?: '--' }} {{ $schedule->end_time ? ' - ' . $schedule->end_time->format('g:i A') : '' }}</p>
                         </div>
                     </div>
-                    
+
                     <div class="p-4 flex items-center gap-3 sm:col-span-2">
                         <div class="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
                             <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
@@ -206,12 +206,12 @@
                         @forelse($schedule->setlist->songs as $index => $song)
                             <div class="flex items-center gap-4 p-3 bg-surface-950/50 rounded-xl border border-surface-800">
                                 <div class="text-surface-600 font-bold w-6 text-center shrink-0">{{ $index + 1 }}</div>
-                                
+
                                 <div class="flex-1 min-w-0">
                                     <p class="font-bold text-white truncate">{{ $song->title }}</p>
                                     <p class="text-sm text-surface-400">{{ $song->artist ?: 'Unknown Artist' }} • {{ $song->formatted_duration }}</p>
                                 </div>
-                                
+
                                 @if($song->pivot->notes)
                                     <div class="hidden md:flex text-sm text-surface-500 bg-surface-900 px-3 py-1.5 rounded-lg max-w-xs truncate">
                                         <svg class="w-4 h-4 mr-1.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
@@ -240,7 +240,7 @@
                     <svg class="w-4 h-4 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                     Band Members
                 </h3>
-                
+
                 <div class="space-y-3">
                     @forelse($schedule->members as $member)
                         <div class="flex items-center gap-3 p-3 bg-surface-950/50 rounded-xl border border-surface-800">
@@ -264,7 +264,7 @@
                         <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         Gig Details
                     </h3>
-                    
+
                     <ul class="space-y-3 text-sm">
                         @if($schedule->address)
                             <li class="flex items-start gap-2">
@@ -379,7 +379,7 @@
                                 Edit
                             </button>
                         </div>
-                        
+
                         <div class="space-y-2 text-sm mb-4 border-b border-surface-800 pb-4">
                             <div class="flex justify-between">
                                 <span class="text-surface-400">Payment</span>
