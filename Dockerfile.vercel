@@ -42,6 +42,8 @@ RUN mkdir -p \
 
 RUN composer dump-autoload --optimize
 
+RUN php artisan about
+
 RUN if [ -f package.json ]; then \
         curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
         apt-get install -y nodejs && \
