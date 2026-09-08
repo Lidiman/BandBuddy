@@ -1,4 +1,4 @@
-FROM php:8.3-cli
+FROM php:8.4-cli
 
 RUN apt-get update && apt-get install -y \
     git \
@@ -10,10 +10,10 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev \
     libfreetype6-dev \
     && docker-php-ext-install \
-        pdo \
-        pdo_pgsql \
-        zip \
-        gd \
+    pdo \
+    pdo_pgsql \
+    zip \
+    gd \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -42,8 +42,8 @@ RUN mkdir -p \
     && chmod -R 775 storage bootstrap/cache
 
 RUN if [ -f package.json ]; then \
-        curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
-        apt-get install -y nodejs && \
-        npm ci && \
-        npm run build; \
+    curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+    apt-get install -y nodejs && \
+    npm ci && \
+    npm run build; \
     fi
