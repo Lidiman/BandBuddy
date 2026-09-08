@@ -1,6 +1,5 @@
-FROM dunglas/frankenphp:php8.3
+FROM php:8.3-cli
 
-# Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -15,46 +14,36 @@ RUN apt-get update && apt-get install -y \
         pdo_pgsql \
         zip \
         gd \
-    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
 
-# Copy Composer files first for layer caching
 COPY composer.json composer.lock ./
 
 RUN composer install \
     --no-dev \
     --no-interaction \
     --prefer-dist \
-    --optimize-autoloader
+    --optimize-autoloader \
+    --no-scripts
 
-# Copy application
 COPY . .
 
-# Laravel permissions
-RUN mkdir -p storage/framework/cache \
+RUN composer dump-autoload --optimize
+
+RUN mkdir -p \
+    storage/framework/cache \
     storage/framework/sessions \
     storage/framework/views \
     storage/logs \
     bootstrap/cache \
-    && chown -R www-data:www-data \
-        storage \
-        bootstrap/cache
+    && chmod -R 775 storage bootstrap/cache
 
-# Build frontend
 RUN if [ -f package.json ]; then \
         curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
         apt-get install -y nodejs && \
         npm ci && \
         npm run build; \
     fi
-
-ENV SERVER_NAME=:8080
-
-EXPOSE 8080
-
-CMD ["php", "artisan", "octane:frankenphp", "--host=0.0.0.0", "--port=8080"]
