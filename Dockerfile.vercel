@@ -10,10 +10,10 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev \
     libfreetype6-dev \
     && docker-php-ext-install \
-    pdo \
-    pdo_pgsql \
-    zip \
-    gd \
+        pdo \
+        pdo_pgsql \
+        zip \
+        gd \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -31,8 +31,7 @@ RUN composer install \
 
 COPY . .
 
-RUN composer dump-autoload --optimize
-
+# Create Laravel required directories BEFORE artisan runs
 RUN mkdir -p \
     storage/framework/cache \
     storage/framework/sessions \
@@ -41,9 +40,11 @@ RUN mkdir -p \
     bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
+RUN composer dump-autoload --optimize
+
 RUN if [ -f package.json ]; then \
-    curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
-    apt-get install -y nodejs && \
-    npm ci && \
-    npm run build; \
+        curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+        apt-get install -y nodejs && \
+        npm ci && \
+        npm run build; \
     fi
